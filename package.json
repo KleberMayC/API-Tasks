@@ -1,5 +1,5 @@
 {
-  "name": "API Task Manager",
+"name": "api-task-manager",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
