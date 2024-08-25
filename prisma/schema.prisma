@@ -1,0 +1,18 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Tasks {
+  id        Int    @id @default(autoincrement())
+  uuid        String   @default(uuid()) @unique
+  titulo     String
+  descricao String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
