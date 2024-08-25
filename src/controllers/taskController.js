@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function criarTask(req, res) {
+async function createTask(req, res) {
   try {
     const { titulo, descricao } = req.body;
 
@@ -29,30 +29,29 @@ async function criarTask(req, res) {
   }
 }
 
-async function findOneTask (req, res) {
-    try {
-      const { id } = req.params;
-      const task = await prisma.tasks.findUnique({
-        where: { id: Number(id) },
-      });
-      if (!task) {
-        return res.status(404).json({
-          sucesso: false,
-          message: "Tarefa não encontrada!",
-        });
-      }
-      res.json({
-        sucesso: true,
-        message: "Tarefa encontrada com sucesso",
-        task,
-      });
-    } catch (error) {
-      res.status(500).json({
+async function findOneTask(req, res) {
+  try {
+    const { id } = req.params;
+    const task = await prisma.tasks.findUnique({
+      where: { id: Number(id) },
+    });
+    if (!task) {
+      return res.status(404).json({
         sucesso: false,
-        message: "Não foi possivel encontrar a tarefa!: " + error.message,
+        message: "Tarefa não encontrada!",
       });
     }
-  
+    res.json({
+      sucesso: true,
+      message: "Tarefa encontrada com sucesso",
+      task,
+    });
+  } catch (error) {
+    res.status(500).json({
+      sucesso: false,
+      message: "Não foi possivel encontrar a tarefa!: " + error.message,
+    });
+  }
 }
 async function findTasks(req, res) {
   try {
@@ -76,7 +75,7 @@ async function findTasks(req, res) {
   }
 }
 
-async function updateTasks(req, res) {
+async function updateTask(req, res) {
   try {
     const { id } = req.params;
     const { titulo, descricao } = req.body;
@@ -113,7 +112,7 @@ async function updateTasks(req, res) {
   }
 }
 
-async function deleteTasks(req, res) {
+async function deleteTask(req, res) {
   try {
     const { id } = req.params;
 
@@ -143,9 +142,9 @@ async function deleteTasks(req, res) {
 }
 
 export default {
-  criarTask,
+  createTask,
   findTasks,
-  updateTasks,
-  deleteTasks,
+  updateTask,
+  deleteTask,
   findOneTask,
 };
