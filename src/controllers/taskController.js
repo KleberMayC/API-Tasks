@@ -78,18 +78,15 @@ async function findTasks(req, res) {
 async function updateTask(req, res) {
   try {
     const { id } = req.params;
-    const { titulo, descricao } = req.body;
-
-    if (!titulo || !descricao) {
-      return res.status(400).json({
-        sucesso: false,
-        error: "Título e descrição são obrigatórios",
-      });
-    }
+    const { titulo, descricao, status } = req.body;
 
     const updatedTask = await prisma.tasks.update({
       where: { id: Number(id) },
-      data: { titulo, descricao },
+      data: {
+        titulo,
+        descricao,
+        status,
+      },
     });
 
     res.json({
@@ -141,10 +138,40 @@ async function deleteTask(req, res) {
   }
 }
 
+async function completeTask(req, res) {
+  try {
+    const { id } = req.params;
+
+    const updatedTask = await prisma.tasks.update({
+      where: { id: Number(id) },
+      data: { concluida: true },
+    });
+
+    res.json({
+      sucesso: true,
+      message: "Tarefa marcada como concluída com sucesso!",
+      updatedTask,
+    });
+  } catch (error) {
+    if (error.code === "P2025") {
+      return res.status(404).json({
+        sucesso: false,
+        message: "Tarefa não encontrada!",
+      });
+    }
+
+    res.status(500).json({
+      sucesso: false,
+      message: "Erro ao marcar tarefa como concluída: " + error.message,
+    });
+  }
+}
+
 export default {
   createTask,
   findTasks,
   updateTask,
   deleteTask,
   findOneTask,
+  completeTask,
 };
